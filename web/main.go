@@ -5,7 +5,6 @@ import (
 	"mux-rest-api/infra"
 )
 
-
 func main() {
 
 	fmt.Println("started application...")
