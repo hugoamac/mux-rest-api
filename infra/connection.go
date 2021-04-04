@@ -5,7 +5,6 @@ import (
 	"log"
 	"time"
 
-	"github.com/spf13/viper"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -22,10 +21,10 @@ type conn struct {
 }
 
 // Connect - This method provides the instance of Connection interface.
-func NewConnection() Connection {
+func NewConnection(config Config) Connection {
 
-	mongo_uri := viper.Get("MONGO_URI").(string)
-	mongo_dbname := viper.Get("MONGO_DBNAME").(string)
+	mongo_uri := config.MongoUri
+	mongo_dbname := config.MongoDbName
 
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
