@@ -16,7 +16,7 @@ const (
 	CollectionName = "contacts"
 )
 
-// ContactRepository - This interface provides the repository of ContactEntity
+// ContactRepository - This interface provides the object with the responsibility to carry out the database transactions of the contact entity.
 type ContactRepository interface {
 	Create(c *ContactEntity) error
 	FetchAll() ([]*ContactEntity, error)
@@ -25,17 +25,17 @@ type ContactRepository interface {
 	Delete(id string) error
 }
 
-// contactRepository - This struct provides the type of ContactRepository
+// contactRepository - This struct provides the implementation for ContactRepository interface.
 type contactRepository struct {
 	collection *mongo.Collection
 }
 
-//NewContactRepository - This method provides the instance of  ContactRepository
+//NewContactRepository - This method provides the instance of ContactRepository interface.
 func NewContactRepository(db *mongo.Database) ContactRepository {
 	return &contactRepository{db.Collection(CollectionName)}
 }
 
-//Create -  This method provides the handler to created the new contact
+//Create -  This method provides the persistence of the contact entity in the database.
 func (r *contactRepository) Create(c *ContactEntity) error {
 
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
@@ -52,7 +52,7 @@ func (r *contactRepository) Create(c *ContactEntity) error {
 	return nil
 }
 
-//FetchAll - This method provides the handler to gets all contacts
+//FetchAll - This method provides to retrieve the list of contacts in the database.
 func (r *contactRepository) FetchAll() ([]*ContactEntity, error) {
 
 	var contacts []*ContactEntity
@@ -78,7 +78,7 @@ func (r *contactRepository) FetchAll() ([]*ContactEntity, error) {
 	return contacts, nil
 }
 
-//Find - This method provides to gets the contact by id
+//Find - This method provides to retrieve a contact in the database by the identifier.
 func (r *contactRepository) Find(id string) (*ContactEntity, error) {
 
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
@@ -101,7 +101,7 @@ func (r *contactRepository) Find(id string) (*ContactEntity, error) {
 	return c, nil
 }
 
-// Update - This method provides update the contact
+// Update - This method provides for updating a contact in the database.
 func (r *contactRepository) Update(c *ContactEntity) (*ContactEntity, error) {
 
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
@@ -126,10 +126,9 @@ func (r *contactRepository) Update(c *ContactEntity) (*ContactEntity, error) {
 	}
 
 	return nil, errors.New("document not found")
-
 }
 
-//Delete - This method provides delete the contact by id
+//Delete - This method provides to remove a contact from the database by the identifier.
 func (r *contactRepository) Delete(id string) error {
 
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
@@ -153,5 +152,5 @@ func (r *contactRepository) Delete(id string) error {
 		return nil
 	}
 
-	return errors.New("documet not found")
+	return errors.New("document not found")
 }
