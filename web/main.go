@@ -9,7 +9,6 @@ import (
 	"time"
 
 	"github.com/gorilla/mux"
-	"github.com/spf13/viper"
 	"github.com/urfave/negroni"
 )
 
@@ -17,11 +16,11 @@ func main() {
 
 	log.Println("started application...")
 
-	infra.LoadVars()
+	config, _ := infra.LoadVars()
 
-	port := viper.Get("APP_PORT").(string)
+	port := config.AppPort
 
-	conn := infra.NewConnection()
+	conn := infra.NewConnection(config)
 	defer conn.Close()
 
 	router := mux.NewRouter().StrictSlash(true)
