@@ -10,6 +10,7 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/spf13/viper"
+	"github.com/urfave/negroni"
 )
 
 func main() {
@@ -28,10 +29,14 @@ func main() {
 	//routes
 	routes.ContactRoutes(conn.DB(), router)
 
+	managerMiddleware := negroni.New()
+	managerMiddleware.Use(negroni.NewLogger())
+	managerMiddleware.UseHandler(router)
+
 	logger := log.New(os.Stderr, "Logger", log.Lshortfile)
 	server := &http.Server{
 		Addr:         port,
-		Handler:      router,
+		Handler:      managerMiddleware,
 		WriteTimeout: 30 * time.Second,
 		ReadTimeout:  30 * time.Second,
 		ErrorLog:     logger,
